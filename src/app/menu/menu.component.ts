@@ -1,22 +1,23 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { inject } from '@angular/core';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
+  imports: [HeaderComponent],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
   @Input() titulo: string = 'Menú';
-  private router = inject(Router);
+  constructor(private router: Router) {}
 
   jugar() {
-    this.router.navigateByUrl('/game');
+    this.router.navigate(['game']);
   }
 
   estadisticas() {
-    console.log('Estadísticas');
+    this.router.navigate(['stats']);
   }
 }

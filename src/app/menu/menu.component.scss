@@ -1,18 +1,88 @@
-.menu {
-    display: flex;
-    gap: 1rem;
+.menu-container {
+  background-color: #1a2334;
+  background-image: 
+    linear-gradient(90deg, rgba(27, 79, 54, 0.1) 2px, transparent 2px),
+    linear-gradient(rgba(27, 79, 54, 0.1) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 2px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px, 4px 4px;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-repeat: repeat, repeat, repeat, repeat, repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  filter: contrast(1.1) brightness(0.9);
+}
+
+.menu-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.menu-title {
+  color: white;
+  font-size: 3rem;
+  font-family: 'Bungee', sans-serif;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  letter-spacing: 0.1rem;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.play-button, .stats-button {
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  font-family: 'Bungee', sans-serif;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 270px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  
+  &:hover {
+    transform: scale(1.05);
   }
   
-  button {
-    padding: 1rem 2rem;
-    font-size: 1.5rem;
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  &:active {
+    box-shadow: none;
+    transform: scale(0.98);
   }
-  
-  button:hover {
-    background-color: #2980b9;
-  }
+}
+
+.play-button {
+  background-color: #e29a45;
+  color: #FEDC77;
+}
+
+.stats-button {
+  background-color: #2d655d;
+  color: #FEDC77;
+  width: 324px;
+}
+
+.thinking-image {
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 300px;
+  height: 300px;
+  background-image: url('../../assets/think.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}

@@ -1,1 +1,8 @@
-<p>game works!</p>
+<app-header></app-header>
+<div class="game-container">
+  <div class="lives">Vidas: {{ lives }}</div>
+  <app-timer [timeLeft]="timeLeft" (timeUp)="timeUp()"></app-timer>
+  <app-operation [operation]="currentOperation"></app-operation>
+  <app-answer-options [options]="answerOptions" [correctAnswer]="correctAnswer" (answerSelected)="checkAnswer($event)"></app-answer-options>
+  <div class="score">RESULTADO: {{ score }}</div>
+</div>

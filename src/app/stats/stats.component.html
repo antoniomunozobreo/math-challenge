@@ -1,0 +1,11 @@
+<app-header></app-header>
+<div class="stats-container">
+  <div class="circle-background"></div>
+  <h1 class="stats-title">ESTADÍSTICAS</h1>
+  <div class="stats-content">
+    <div class="stat-item">Tiempo total jugado: {{ formatTime(totalPlayTime) }}</div>
+    <div class="stat-item">Operaciones resueltas: {{ totalOperationsResolved }}</div>
+    <div class="stat-item">Mayor puntuación: {{ highestScore }}</div>
+  </div>
+  <button class="menu-button" (click)="goToMenu()">VOLVER AL MENÚ</button>
+</div>

@@ -1,0 +1,21 @@
+<app-header></app-header>
+<div class="game-over-container">
+  <div class="circle-background"></div>
+  <h1 class="game-over-title">¡JUEGO TERMINADO!</h1>
+  <div class="score">Puntuación final: {{ score }}</div>
+  <div class="operations-list">
+    <h2>Operaciones resueltas:</h2>
+    <div *ngFor="let op of operations" class="operation-item">
+      <span>{{ op.left }} {{ op.operator }} {{ op.right }} = {{ op.result }}</span>
+      <span [class.correct]="op.selectedAnswer === op.result" [class.incorrect]="op.selectedAnswer !== op.result">
+        (Tu respuesta: {{ op.selectedAnswer }})
+      </span>
+    </div>
+    <div *ngIf="operations.length === 0" class="no-operations">No resolviste ninguna operación.</div>
+  </div>
+  <div class="buttons">
+    <button class="play-again-button" (click)="playAgain()">JUGAR DE NUEVO</button>
+    <button class="menu-button" (click)="goToMenu()">VOLVER AL MENÚ</button>
+    <button class="stats-button" (click)="goToStats()">VER ESTADÍSTICAS</button>
+  </div>
+</div>

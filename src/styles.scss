@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Estilo para la cuadrícula que se ve en el fondo */
+body {
+  background-color: #1a2334;
+  background-image: 
+    linear-gradient(rgba(45, 52, 71, 0.8) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 52, 71, 0.8) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
