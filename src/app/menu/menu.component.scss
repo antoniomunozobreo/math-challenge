@@ -1,14 +1,6 @@
+@use '../../styles.scss' as *;
+
 .menu-container {
-  background-color: #1a2334;
-  background-image: 
-    linear-gradient(90deg, rgba(27, 79, 54, 0.1) 2px, transparent 2px),
-    linear-gradient(rgba(27, 79, 54, 0.1) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 2px);
-  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px, 4px 4px;
-  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
-  background-repeat: repeat, repeat, repeat, repeat, repeat;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -16,22 +8,36 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
-  filter: contrast(1.1) brightness(0.9);
+  padding: 1rem;
 }
 
 .menu-content {
   position: relative;
   z-index: 2;
   text-align: center;
+  width: 100%;
+  max-width: 600px;
 }
 
 .menu-title {
-  color: white;
-  font-size: 3rem;
-  font-family: 'Bungee', sans-serif;
+  color: $text-color;
+  font-size: 3.2rem;
+  font-family: $font-family;
   font-weight: bold;
   margin-bottom: 2rem;
   letter-spacing: 0.1rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
 }
 
 .menu-buttons {
@@ -39,24 +45,46 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    gap: 1rem;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    gap: 1.25rem;
+  }
 }
 
-.play-button, .stats-button {
+.play-button,
+.stats-button {
   padding: 1rem 2rem;
-  font-size: 2rem;
-  font-family: 'Bungee', sans-serif;
+  font-size: 1.5rem;
+  font-family: $font-family;
   font-weight: bold;
   border: none;
-  border-radius: 10px;
+  border-radius: $border-radius;
   cursor: pointer;
-  transition: transform 0.2s ease;
-  width: 270px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  
+  transition: $transition;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: $box-shadow;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    max-width: 200px;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.3rem;
+    max-width: 250px;
+  }
+
   &:hover {
     transform: scale(1.05);
   }
-  
+
   &:active {
     box-shadow: none;
     transform: scale(0.98);
@@ -64,14 +92,13 @@
 }
 
 .play-button {
-  background-color: #e29a45;
-  color: #FEDC77;
+  background-color: $warning-color;
+  color: $accent-color;
 }
 
 .stats-button {
-  background-color: #2d655d;
-  color: #FEDC77;
-  width: 324px;
+  background-color: $secondary-color;
+  color: $accent-color;
 }
 
 .thinking-image {
@@ -85,4 +112,22 @@
   background-image: url('../../assets/think.png');
   background-size: contain;
   background-repeat: no-repeat;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 100px;
+    height: 100px;
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    transform: none;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    width: 150px;
+    height: 150px;
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    transform: none;
+  }
 }

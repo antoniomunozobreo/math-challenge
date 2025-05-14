@@ -13,7 +13,7 @@ import { PLATFORM_ID, Inject } from '@angular/core';
   styleUrls: ['./stats.component.scss']
 })
 export class StatsComponent implements OnInit {
-  totalPlayTime: number = 0; // In seconds
+  totalPlayTime: number = 0;
   totalOperationsResolved: number = 0;
   highestScore: number = 0;
 

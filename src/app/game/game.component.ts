@@ -3,16 +3,18 @@ import { TimerComponent } from '../timer/timer.component';
 import { OperationComponent } from '../operation/operation.component';
 import { AnswerOptionsComponent } from '../answer-options/answer-options.component';
 import { HeaderComponent } from '../header/header.component';
+import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
-import { VolumeService } from '../volume.service';
+import { VolumeService } from '../services/volume.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [HeaderComponent, TimerComponent, OperationComponent, AnswerOptionsComponent],
+  imports: [CommonModule, HeaderComponent, TimerComponent, OperationComponent, AnswerOptionsComponent],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
@@ -32,22 +34,20 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private volumeService: VolumeService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.correctSound = new Audio('/assets/correct.wav');
       this.wrongSound = new Audio('/assets/wrong.wav');
-      this.correctSound.volume = 0.5;
-      this.wrongSound.volume = 0.5;
+      this.loadVolumeToAudio();
       this.volumeSubscription = this.volumeService.volume$.subscribe(volume => {
-        if (this.correctSound) this.correctSound.volume = volume;
-        if (this.wrongSound) this.wrongSound.volume = volume;
+        this.loadVolumeToAudio(volume);
       });
       this.startTime = Date.now();
     }
-    this.loadVolume();
     this.generateOperation();
   }
 
@@ -55,8 +55,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isPlatformBrowser(this.platformId) && !this.correctSound) {
       this.correctSound = new Audio('/assets/correct.wav');
       this.wrongSound = new Audio('/assets/wrong.wav');
-      this.correctSound.volume = 0.5;
-      this.wrongSound.volume = 0.5;
+      this.loadVolumeToAudio();
     }
   }
 
@@ -73,15 +72,25 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
       if (savedVolume !== null) {
         const volume = parseFloat(savedVolume);
         this.volumeService.setVolume(volume);
-        if (this.correctSound) this.correctSound.volume = volume;
-        if (this.wrongSound) this.wrongSound.volume = volume;
+        console.log('Loaded volume from localStorage:', volume);
+      } else {
+        console.log('No saved volume found, using default 0.5');
       }
+    }
+  }
+
+  loadVolumeToAudio(volume?: number) {
+    if (isPlatformBrowser(this.platformId)) {
+      const currentVolume = volume !== undefined ? volume : this.volumeService.getVolume();
+      if (this.correctSound) this.correctSound.volume = currentVolume;
+      if (this.wrongSound) this.wrongSound.volume = currentVolume;
+      console.log('Applied volume to audio:', currentVolume);
     }
   }
 
   saveStats() {
     if (isPlatformBrowser(this.platformId)) {
-      const playTime = Math.floor((Date.now() - this.startTime) / 1000); // Seconds
+      const playTime = Math.floor((Date.now() - this.startTime) / 1000);
       const stats = localStorage.getItem('gameStats');
       let gameStats = stats ? JSON.parse(stats) : { totalPlayTime: 0, totalOperationsResolved: 0, highestScore: 0 };
       gameStats.totalPlayTime += playTime;
@@ -103,7 +112,6 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case '-':
         this.currentOperation.result = this.currentOperation.left - this.currentOperation.right;
-        if (this.currentOperation.result < 0) this.currentOperation.result = Math.abs(this.currentOperation.result);
         break;
       case '*':
         this.currentOperation.result = this.currentOperation.left * this.currentOperation.right;
@@ -120,7 +128,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     this.answerOptions = [this.correctAnswer];
     while (this.answerOptions.length < 4) {
       const wrongAnswer = this.correctAnswer + (Math.floor(Math.random() * 10) - 5);
-      if (wrongAnswer > 0 && wrongAnswer !== this.correctAnswer && !this.answerOptions.includes(wrongAnswer)) {
+      if (wrongAnswer !== this.correctAnswer && !this.answerOptions.includes(wrongAnswer)) {
         this.answerOptions.push(wrongAnswer);
       }
     }
@@ -147,10 +155,19 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 
   endGame() {
     this.saveStats();
+    console.log('Navigating to game-over with score:', this.score);
+
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('lastGame', JSON.stringify({ operations: this.resolvedOperations, score: this.score }));
+    }
     this.router.navigate(['game-over'], { state: { operations: this.resolvedOperations, score: this.score } });
   }
 
   timeUp() {
     this.endGame();
+  }
+
+  getLivesArray(): number[] {
+    return Array.from({ length: this.lives }, (_, index) => index);
   }
 }

@@ -1,16 +1,74 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
 
+// Variables
+$primary-bg: #1a2334;
+$primary-grid-color: rgba(27, 79, 54, 0.1);
+$secondary-grid-color: rgba(255, 255, 255, 0.05);
+$dot-color: rgba(255, 255, 255, 0.02);
+$accent-color: #ffc107;
+$success-color: #26a69a;
+$warning-color: #e29a45;
+$error-color: red;
+$secondary-color: #2d655d;
+$text-color: #fff;
+$font-family: 'Bungee', sans-serif;
+$font-size-base: 1.5rem;
+$font-size-large: 3rem;
+$font-size-small: 1rem;
+$border-radius: 10px;
+$box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+$transition: transform 0.2s ease;
+
+// Breakpoints
+$breakpoint-mobile: 576px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1200px;
+
 html, body {
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
+  font-family: $font-family;
+  font-size: $font-size-base;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  color: $text-color;
 }
 
-/* Estilo para la cuadrícula que se ve en el fondo */
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+// Background grid pattern
 body {
-  background-color: #1a2334;
+  background-color: $primary-bg;
   background-image: 
-    linear-gradient(rgba(45, 52, 71, 0.8) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(45, 52, 71, 0.8) 1px, transparent 1px);
-  background-size: 20px 20px;
+    linear-gradient(90deg, $primary-grid-color 2px, transparent 2px),
+    linear-gradient($primary-grid-color 2px, transparent 2px),
+    linear-gradient(90deg, $secondary-grid-color 1px, transparent 1px),
+    linear-gradient($secondary-grid-color 1px, transparent 1px),
+    radial-gradient(circle, $dot-color 1px, transparent 2px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px, 4px 4px;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-repeat: repeat, repeat, repeat, repeat, repeat;
+  filter: contrast(1.1) brightness(0.9);
+
+  @media (max-width: $breakpoint-mobile) {
+    background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px, 2px 2px;
+    font-size: $font-size-small;
+  }
+  @media (max-width: $breakpoint-tablet) {
+    background-size: 75px 75px, 75px 75px, 15px 15px, 15px 15px, 3px 3px;
+    font-size: 1.25rem;
+  }
+}
+
+// Responsive typography
+h1 {
+  font-size: $font-size-large;
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 2.5rem;
+  }
 }

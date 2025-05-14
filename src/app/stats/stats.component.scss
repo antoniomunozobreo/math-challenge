@@ -1,68 +1,84 @@
+@use '../../styles.scss' as *;
+
 .stats-container {
-    background-color: #1a2334;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    text-align: center;
-    padding: 20px;
+  background-color: $primary-bg;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stats-title {
+  color: $text-color;
+  font-size: $font-size-large;
+  font-family: $font-family;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  letter-spacing: 0.1rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
   }
-  
-  .circle-background {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(0, 150, 136, 0.8) 0%, transparent 70%);
-    border-radius: 50%;
-    z-index: -1;
+}
+
+.stats-content {
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.stat-item {
+  color: $text-color;
+  font-family: $font-family;
+  font-size: $font-size-base;
+  margin: 1rem 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-large;
+    margin: 0.5rem 0;
   }
-  
-  .stats-title {
-    color: white;
-    font-size: 3rem;
-    font-family: 'Bungee', sans-serif;
-    font-weight: bold;
-    margin-bottom: 2rem;
-    letter-spacing: 0.1rem;
+}
+
+.menu-button {
+  padding: 1rem 2rem;
+  font-size: $font-size-base;
+  font-family: $font-family;
+  font-weight: bold;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: $transition;
+  width: 100%;
+  max-width: 300px;
+  background-color: $secondary-color;
+  color: $accent-color;
+  box-shadow: $box-shadow;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0.5rem 1rem;
+    font-size: $font-size-small;
+    max-width: 200px;
   }
-  
-  .stats-content {
-    margin-bottom: 2rem;
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    max-width: 250px;
   }
-  
-  .stat-item {
-    color: white;
-    font-family: 'Bungee', sans-serif;
-    font-size: 1.5rem;
-    margin: 1rem 0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+
+  &:hover {
+    transform: scale(1.05);
   }
-  
-  .menu-button {
-    padding: 1rem 2rem;
-    font-size: 1.5rem;
-    font-family: 'Bungee', sans-serif;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    width: 300px;
-    background-color: #2d655d;
-    color: #FEDC77;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  
-    &:hover {
-      transform: scale(1.05);
-    }
-  
-    &:active {
-      box-shadow: none;
-      transform: scale(0.98);
-    }
+
+  &:active {
+    box-shadow: none;
+    transform: scale(0.98);
   }
+}

@@ -10,13 +10,13 @@ import { CommonModule } from '@angular/common';
 })
 export class AnswerOptionsComponent implements OnChanges {
   @Input() options: number[] = [];
-  @Input() correctAnswer: number = 0; // Explicitly receive the correct answer
+  @Input() correctAnswer: number = 0;
   @Output() answerSelected = new EventEmitter<number>();
   incorrectAnswer: number | null = null;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['options']) {
-      this.incorrectAnswer = null; // Reset incorrect answer on new options
+      this.incorrectAnswer = null;
     }
   }
 
@@ -25,7 +25,7 @@ export class AnswerOptionsComponent implements OnChanges {
       this.incorrectAnswer = answer;
       setTimeout(() => {
         this.incorrectAnswer = null;
-      }, 1000); // Highlight for 1 second
+      }, 1000);
     }
     this.answerSelected.emit(answer);
   }

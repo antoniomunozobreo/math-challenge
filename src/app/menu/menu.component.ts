@@ -13,11 +13,11 @@ export class MenuComponent {
   @Input() titulo: string = 'Menú';
   constructor(private router: Router) {}
 
-  jugar() {
+  play() {
     this.router.navigate(['game']);
   }
 
-  estadisticas() {
+  stats() {
     this.router.navigate(['stats']);
   }
 }
