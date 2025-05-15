@@ -1,122 +1,168 @@
 @use '../../styles.scss' as *;
 
 .game-container {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "main main"
+    "score score";
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  padding: 2rem 1rem;
+  gap: 2rem;
+  margin-left: 10rem;
+
+  @media (max-width: $breakpoint-desktop) {
+    margin-left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 8rem;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding-top: 6.5rem;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    padding-top: 8rem;
+  }
+}
+
+.header {
+  grid-area: header;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-
-  @media (min-width: $breakpoint-desktop) {
-    display: grid;
-    grid-template-areas:
-      "lives-timer lives-timer"
-      "operation operation"
-      "answers answers"
-      "score score";
-    grid-template-rows: auto auto 1fr auto;
-    gap: 1rem;
-    padding: 2rem;
-  }
 }
 
 .lives-timer {
-  grid-area: lives-timer;
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
   display: flex;
   align-items: center;
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  right: 1rem;
-  justify-content: space-between;
-  flex-direction: row;
+  gap: 1rem;
+  z-index: 100;
 
-  @media (max-width: $breakpoint-mobile) {
-    flex-direction: column;
-    top: 5rem;
+  @media (max-width: $breakpoint-desktop) {
+    flex-direction: column-reverse;
+    align-items: flex-end;
     gap: 0.5rem;
-    position: relative;
+    top: 3rem;
+    right: 1rem;
+  }
+
+  .lives {
+    background-color: $warning-color;
+    padding: 5px 15px;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    display: flex;
+    gap: 0.3rem;
     align-items: center;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: red;
+    }
+
+    @media (max-width: $breakpoint-desktop) {
+      padding: 4px 12px;
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .timer {
+    background-color: $secondary-color;
+    color: $text-color;
+    padding: 0.5rem 1rem;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    font-family: $font-family;
+    font-weight: bold;
+    font-size: $font-size-base;
+
+    @media (max-width: $breakpoint-desktop) {
+      font-size: 0.9rem;
+      padding: 0.3rem 0.8rem;
+    }
   }
 }
 
-.lives {
-  color: $text-color;
-  font-family: $font-family;
-  font-size: $font-size-base;
-  background: $warning-color;
-  padding: 10px 20px;
-  border-radius: $border-radius;
-  box-shadow: $box-shadow;
+.main-content {
+  grid-area: main;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 5px;
-  margin-right: 12rem;
-  margin-top: 1.5rem;
-
-  @media (max-width: $breakpoint-mobile) {
-    margin-right: 0;
-    padding: 5px 10px;
-    font-size: $font-size-small;
-    margin-top: 0;
-  }
-  @media (max-width: $breakpoint-tablet) {
-    margin-right: 6rem;
-    padding: 8px 15px;
-    font-size: 1.25rem;
-  }
-}
-
-.circle-background {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, $success-color 0%, transparent 70%);
-  border-radius: 50%;
-  z-index: -1;
-
-  @media (max-width: $breakpoint-mobile) {
-    width: 200px;
-    height: 200px;
-  }
-  @media (max-width: $breakpoint-tablet) {
-    width: 300px;
-    height: 300px;
-  }
-}
-
-app-operation {
-  grid-area: operation;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  gap: 2rem;
+  position: relative;
 }
 
 app-answer-options {
-  grid-area: answers;
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.answer-option {
+  padding: 1.2rem;
+  background-color: $success-color;
+  color: $text-color;
+  border-radius: $border-radius;
+  cursor: pointer;
+  font-family: $font-family;
+  font-weight: bold;
+  font-size: $font-size-base;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  box-shadow: $box-shadow;
+  text-align: center;
   width: 100%;
-  display: flex;
-  justify-content: center;
+  transition: background-color 0.3s, transform 0.1s;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0.5rem 1rem;
+    font-size: $font-size-small;
+  }
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+  }
+
+  &.incorrect {
+    background-color: $error-color;
+  }
+
+  &:hover {
+    background-color: darken($success-color, 10%);
+  }
+
+  &.incorrect:hover {
+    background-color: $error-color;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .score {
   grid-area: score;
-  color: $accent-color;
   font-family: $font-family;
-  font-size: $font-size-base;
-  margin-top: 20px;
+  font-weight: bold;
+  font-size: 2rem;
+  color: $accent-color;
+  text-align: center;
+  margin-top: 1rem;
 
   @media (max-width: $breakpoint-mobile) {
     font-size: $font-size-small;
-    margin-top: 10px;
+    margin-top: 0.5rem;
   }
 }

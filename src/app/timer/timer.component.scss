@@ -8,9 +8,16 @@
   padding: 10px 20px;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
+  min-width: 300px;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: $font-size-small;
+    min-width: 210px;
+  }
 
   @media (max-width: $breakpoint-mobile) {
     padding: 5px 10px;
     font-size: $font-size-small;
+    min-width: 190px;
   }
 }

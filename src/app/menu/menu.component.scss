@@ -1,14 +1,14 @@
 @use '../../styles.scss' as *;
 
 .menu-container {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .menu-content {
@@ -17,6 +17,15 @@
   text-align: center;
   width: 100%;
   max-width: 600px;
+
+  @media (max-width: $breakpoint-desktop) {
+    max-width: 500px;
+    top: 6rem;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    max-width: 350px;
+  }
 }
 
 .menu-title {
@@ -27,16 +36,14 @@
   margin-bottom: 2rem;
   letter-spacing: 0.1rem;
 
-  @media (max-width: $breakpoint-mobile) {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    margin-top: 0.5rem;
+  @media (max-width: $breakpoint-desktop) {
+    font-size: 2.8rem;
+    margin-bottom: 1.5rem;
   }
 
   @media (max-width: $breakpoint-tablet) {
     font-size: 2.4rem;
     margin-bottom: 1rem;
-    margin-top: 1rem;
   }
 }
 
@@ -46,12 +53,12 @@
   align-items: center;
   gap: 1.5rem;
 
-  @media (max-width: $breakpoint-mobile) {
-    gap: 1rem;
+  @media (max-width: $breakpoint-desktop) {
+    gap: 1.25rem;
   }
 
   @media (max-width: $breakpoint-tablet) {
-    gap: 1.25rem;
+    gap: 1rem;
   }
 }
 
@@ -69,15 +76,15 @@
   max-width: 380px;
   box-shadow: $box-shadow;
 
-  @media (max-width: $breakpoint-mobile) {
-    padding: 0.5rem 1rem;
-    font-size: 1.2rem;
-    max-width: 200px;
+  @media (max-width: $breakpoint-desktop) {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.3rem;
+    max-width: 300px;
   }
 
   @media (max-width: $breakpoint-tablet) {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.3rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
     max-width: 250px;
   }
 
@@ -102,32 +109,27 @@
 }
 
 .thinking-image {
+  width: 250px;
+  height: 250px;
+  background-image: url('../../assets/think.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  
   position: absolute;
   top: 50%;
   right: 5%;
   transform: translateY(-50%);
-  z-index: 2;
-  width: 300px;
-  height: 300px;
-  background-image: url('../../assets/think.png');
-  background-size: contain;
-  background-repeat: no-repeat;
 
-  @media (max-width: $breakpoint-mobile) {
-    width: 100px;
-    height: 100px;
-    top: auto;
-    bottom: 1rem;
-    right: 1rem;
-    transform: none;
+  @media (max-width: $breakpoint-desktop) {
+    position: static;
+    width: 80px;
+    height: 80px;
+    margin-top: 8rem;
   }
 
   @media (max-width: $breakpoint-tablet) {
-    width: 150px;
-    height: 150px;
-    top: auto;
-    bottom: 1rem;
-    right: 1rem;
-    transform: none;
+    width: 120px;
+    height: 120px;
+    margin-top: 9rem;
   }
 }
