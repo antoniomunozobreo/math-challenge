@@ -9,13 +9,31 @@
         </svg>
       }
     </div>
-    <app-timer [timeLeft]="timeLeft" (timeUp)="timeUp()"></app-timer>
+    <app-timer [timeLeft]="timeLeft" [isPaused]="isPaused || showInstructions" (timeUp)="timeUp()"></app-timer>
   </div>
 
   <div class="main-content">
     <app-operation [operation]="currentOperation"></app-operation>
-    <app-answer-options [options]="answerOptions" [correctAnswer]="correctAnswer" (answerSelected)="checkAnswer($event)"></app-answer-options>
+    <app-answer-options [options]="answerOptions" [correctAnswer]="correctAnswer" (answerSelected)="checkAnswer($event)" [disabled]="showInstructions"></app-answer-options>
   </div>
 
   <div class="score">PUNTUACIÓN: {{ score }}</div>
+  <button class="pause-button" (click)="togglePause()" [disabled]="showInstructions">PAUSAR</button>
+</div>
+
+<div class="modal" [class.show]="isPaused">
+  <div class="modal-content">
+    <h2>Pausa</h2>
+    <button class="modal-button" (click)="resumeGame()">Reanudar</button>
+    <button class="modal-button" (click)="goToStats()">Estadísticas</button>
+    <button class="modal-button" (click)="goToMenu()">Volver al Menú</button>
+  </div>
+</div>
+
+<div class="modal" [class.show]="showInstructions">
+  <div class="modal-content instructions">
+    <h2>Instrucciones</h2>
+    <p>¡Bienvenido a Math Challenge! Resuelve las operaciones matemáticas lo más rápido posible. Tienes 3 vidas y 60 segundos. Cada respuesta correcta suma 1 punto, y cada incorrecta resta 10 segundos y 1 vida. ¡Buena suerte!</p>
+    <button class="modal-button" (click)="startGame()">Empezar</button>
+  </div>
 </div>

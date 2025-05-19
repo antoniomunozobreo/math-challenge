@@ -1,38 +1,32 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { PLATFORM_ID, Inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VolumeService {
   private volumeSubject = new BehaviorSubject<number>(0.5);
-  volume$: Observable<number> = this.volumeSubject.asObservable();
+  public volume$ = this.volumeSubject.asObservable();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
       const savedVolume = localStorage.getItem('volume');
       if (savedVolume !== null) {
-        const volume = parseFloat(savedVolume);
-        this.volumeSubject.next(volume);
-        console.log('Loaded volume from localStorage:', volume);
-      } else {
-        console.log('No saved volume found, using default 0.5');
+        this.volumeSubject.next(parseFloat(savedVolume));
       }
     }
   }
 
-  setVolume(volume: number) {
-    if (volume >= 0 && volume <= 1) {
-      this.volumeSubject.next(volume);
-      if (isPlatformBrowser(this.platformId)) {
-        localStorage.setItem('volume', volume.toString());
-        console.log('Saved volume to localStorage:', volume);
-      }
+  public setVolume(volume: number): void {
+    this.volumeSubject.next(volume);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('volume', volume.toString());
     }
   }
 
-  getVolume(): number {
+  public getVolume(): number {
     return this.volumeSubject.getValue();
   }
 }

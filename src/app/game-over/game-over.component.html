@@ -5,13 +5,17 @@
   <div class="score">Puntuación final: {{ score }}</div>
   <div class="operations-list">
     <h2>Operaciones resueltas:</h2>
-    <div *ngFor="let op of operations" class="operation-item">
-      <span>{{ op.left }} {{ op.operator }} {{ op.right }} = {{ op.result }}</span>
-      <span [class.correct]="op.selectedAnswer === op.result" [class.incorrect]="op.selectedAnswer !== op.result">
-        (Tu respuesta: {{ op.selectedAnswer }})
-      </span>
-    </div>
-    <div *ngIf="operations.length === 0" class="no-operations">No resolviste ninguna operación.</div>
+    @for (op of operations; track op) {
+      <div class="operation-item">
+        <span>{{ op.left }} {{ op.operator }} {{ op.right }} = {{ op.result }}</span>
+        <span [class.correct]="op.selectedAnswer === op.result" [class.incorrect]="op.selectedAnswer !== op.result">
+          (Tu respuesta: {{ op.selectedAnswer }})
+        </span>
+      </div>
+    }
+    @if (operations.length === 0) {
+      <div class="no-operations">No resolviste ninguna operación.</div>
+    }
   </div>
   <div class="buttons">
     <button class="play-again-button" (click)="playAgain()">JUGAR DE NUEVO</button>

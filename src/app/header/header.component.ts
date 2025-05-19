@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VolumeService } from '../services/volume.service';
 import { isPlatformBrowser } from '@angular/common';
@@ -9,30 +9,34 @@ import { Inject, PLATFORM_ID } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush // Optimización de change detection
 })
 export class HeaderComponent implements AfterViewInit {
-  @ViewChild('soundSlider') soundSlider!: ElementRef<HTMLInputElement>;
-  isMuted = false;
+  @ViewChild('soundSlider') private soundSlider!: ElementRef<HTMLInputElement>;
+  public isMuted: boolean = false;
 
   constructor(
     private volumeService: VolumeService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  ngAfterViewInit() {
+  public ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const savedVolume = localStorage.getItem('volume');
+      const savedVolume: string | null = localStorage.getItem('volume');
       if (savedVolume !== null) {
-        const volume = parseFloat(savedVolume) * 100;
+        const volume: number = parseFloat(savedVolume) * 100;
         this.soundSlider.nativeElement.value = volume.toString();
         this.isMuted = volume === 0;
+        this.cdr.markForCheck(); // Forzar detección de cambios con OnPush
       }
       this.soundSlider.nativeElement.addEventListener('input', () => {
-        const value = Number(this.soundSlider.nativeElement.value);
+        const value: number = Number(this.soundSlider.nativeElement.value);
         this.isMuted = value === 0;
-        const volume = value / 100;
+        const volume: number = value / 100;
         this.volumeService.setVolume(volume);
+        this.cdr.markForCheck(); // Actualizar la UI después del cambio
       });
     }
   }

@@ -1,8 +1,7 @@
 <div class="answer-options">
-    <div *ngFor="let option of options"
-         class="answer-option"
-         [class.incorrect]="incorrectAnswer === option"
-         (click)="selectAnswer(option)">
+  @for (option of options; track option) {
+    <div class="answer-option" [class.incorrect]="incorrectAnswer === option" (click)="selectAnswer(option)">
       {{ option }}
     </div>
-  </div>
+  }
+</div>

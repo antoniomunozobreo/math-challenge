@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { TimerComponent } from '../timer/timer.component';
 import { OperationComponent } from '../operation/operation.component';
 import { AnswerOptionsComponent } from '../answer-options/answer-options.component';
@@ -9,7 +9,6 @@ import { PLATFORM_ID, Inject } from '@angular/core';
 import { VolumeService } from '../services/volume.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-game',
@@ -19,12 +18,15 @@ import { Location } from '@angular/common';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
-  score = 0;
-  lives = 3;
-  currentOperation = { left: 0, right: 0, operator: '+', result: 0 };
-  answerOptions: number[] = [];
-  correctAnswer: number = 0;
-  timeLeft = 185;
+  public score: number = 0;
+  public lives: number = 3;
+  public currentOperation: { left: number; right: number; operator: string; result: number } = { left: 0, right: 0, operator: '+', result: 0 };
+  public answerOptions: number[] = [];
+  public correctAnswer: number = 0;
+  public timeLeft: number = 60;
+  public isPaused: boolean = false;
+  public showInstructions: boolean = false;
+
   private correctSound: HTMLAudioElement | null = null;
   private wrongSound: HTMLAudioElement | null = null;
   private volumeSubscription: Subscription | null = null;
@@ -35,23 +37,31 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     private volumeService: VolumeService,
     private router: Router,
-    private location: Location
+    private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
+      this.showInstructions = true;
+
       this.correctSound = new Audio('/assets/correct.wav');
       this.wrongSound = new Audio('/assets/wrong.wav');
       this.loadVolumeToAudio();
-      this.volumeSubscription = this.volumeService.volume$.subscribe(volume => {
+      this.volumeSubscription = this.volumeService.volume$.subscribe((volume: number) => {
         this.loadVolumeToAudio(volume);
       });
       this.startTime = Date.now();
+      if (!this.showInstructions) {
+        this.generateOperation();
+      }
+    } else {
+      this.currentOperation = { left: 0, right: 0, operator: '+', result: 0 };
+      this.answerOptions = [];
+      this.correctAnswer = 0;
     }
-    this.generateOperation();
   }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId) && !this.correctSound) {
       this.correctSound = new Audio('/assets/correct.wav');
       this.wrongSound = new Audio('/assets/wrong.wav');
@@ -59,40 +69,31 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     if (this.volumeSubscription) {
       this.volumeSubscription.unsubscribe();
     }
-    this.saveStats();
-  }
-
-  loadVolume() {
     if (isPlatformBrowser(this.platformId)) {
-      const savedVolume = localStorage.getItem('volume');
-      if (savedVolume !== null) {
-        const volume = parseFloat(savedVolume);
-        this.volumeService.setVolume(volume);
-        console.log('Loaded volume from localStorage:', volume);
-      } else {
-        console.log('No saved volume found, using default 0.5');
-      }
+      this.saveStats();
     }
   }
 
-  loadVolumeToAudio(volume?: number) {
+  private loadVolumeToAudio(volume?: number): void {
     if (isPlatformBrowser(this.platformId)) {
-      const currentVolume = volume !== undefined ? volume : this.volumeService.getVolume();
+      const currentVolume: number = volume !== undefined ? volume : this.volumeService.getVolume();
       if (this.correctSound) this.correctSound.volume = currentVolume;
       if (this.wrongSound) this.wrongSound.volume = currentVolume;
       console.log('Applied volume to audio:', currentVolume);
     }
   }
 
-  saveStats() {
+  private saveStats(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const playTime = Math.floor((Date.now() - this.startTime) / 1000);
-      const stats = localStorage.getItem('gameStats');
-      let gameStats = stats ? JSON.parse(stats) : { totalPlayTime: 0, totalOperationsResolved: 0, highestScore: 0 };
+      const playTime: number = Math.floor((Date.now() - this.startTime) / 1000);
+      const stats: string | null = localStorage.getItem('gameStats');
+      let gameStats: { totalPlayTime: number; totalOperationsResolved: number; highestScore: number } = stats
+        ? JSON.parse(stats)
+        : { totalPlayTime: 0, totalOperationsResolved: 0, highestScore: 0 };
       gameStats.totalPlayTime += playTime;
       gameStats.totalOperationsResolved += this.score;
       gameStats.highestScore = Math.max(gameStats.highestScore, this.score);
@@ -100,11 +101,14 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  generateOperation() {
-    const operators = ['+', '-', '*', '/'];
-    this.currentOperation.operator = operators[Math.floor(Math.random() * operators.length)];
-    this.currentOperation.left = Math.floor(Math.random() * 12) + 1;
-    this.currentOperation.right = Math.floor(Math.random() * 12) + 1;
+  private generateOperation(): void {
+    const operators: string[] = ['+', '-', '*', '/'];
+    this.currentOperation = {
+      left: Math.floor(Math.random() * 12) + 1,
+      right: Math.floor(Math.random() * 12) + 1,
+      operator: operators[Math.floor(Math.random() * operators.length)],
+      result: 0
+    };
 
     switch (this.currentOperation.operator) {
       case '+':
@@ -125,49 +129,88 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.correctAnswer = this.currentOperation.result;
 
-    this.answerOptions = [this.correctAnswer];
-    while (this.answerOptions.length < 4) {
-      const wrongAnswer = this.correctAnswer + (Math.floor(Math.random() * 10) - 5);
-      if (wrongAnswer !== this.correctAnswer && !this.answerOptions.includes(wrongAnswer)) {
-        this.answerOptions.push(wrongAnswer);
+    const optionsSet: Set<number> = new Set([this.correctAnswer]);
+    for (let i = 0; i < 3; i++) {
+      let wrongAnswer: number;
+      let foundUnique = false;
+      for (let attempt = 0; attempt < 10 && !foundUnique; attempt++) {
+        wrongAnswer = this.correctAnswer + (Math.floor(Math.random() * 10) - 5);
+        if (!optionsSet.has(wrongAnswer)) {
+          foundUnique = true;
+          optionsSet.add(wrongAnswer);
+        }
       }
     }
-    this.answerOptions.sort(() => Math.random() - 0.5);
+    this.answerOptions = Array.from(optionsSet).sort(() => Math.random() - 0.5);
+    this.cdr.detectChanges();
   }
 
-  checkAnswer(selectedAnswer: number) {
-    const operationRecord = { ...this.currentOperation, selectedAnswer };
-    this.resolvedOperations.push(operationRecord);
+  public checkAnswer(selectedAnswer: number): void {
+    if (!this.isPaused && !this.showInstructions) {
+      const operationRecord: { left: number; right: number; operator: string; result: number; selectedAnswer: number } = { ...this.currentOperation, selectedAnswer };
+      this.resolvedOperations.push(operationRecord);
 
-    if (selectedAnswer === this.correctAnswer) {
-      this.score += 1;
-      if (this.correctSound) this.correctSound.play();
-      this.generateOperation();
-    } else {
-      this.lives -= 1;
-      if (this.wrongSound) this.wrongSound.play();
-      this.timeLeft = Math.max(0, this.timeLeft - 10);
-      if (this.lives <= 0) {
-        this.endGame();
+      if (selectedAnswer === this.correctAnswer) {
+        this.score += 1;
+        if (this.correctSound) this.correctSound.play();
+        this.generateOperation();
+      } else {
+        this.lives -= 1;
+        if (this.wrongSound) this.wrongSound.play();
+        this.timeLeft = Math.max(0, this.timeLeft - 10);
+        if (this.lives <= 0) {
+          this.endGame();
+        }
       }
     }
   }
 
-  endGame() {
-    this.saveStats();
-    console.log('Navigating to game-over with score:', this.score);
-
+  public endGame(): void {
     if (isPlatformBrowser(this.platformId)) {
+      this.saveStats();
+      console.log('Navigating to game-over with score:', this.score);
       localStorage.setItem('lastGame', JSON.stringify({ operations: this.resolvedOperations, score: this.score }));
     }
     this.router.navigate(['game-over'], { state: { operations: this.resolvedOperations, score: this.score } });
   }
 
-  timeUp() {
+  public timeUp(): void {
     this.endGame();
   }
 
-  getLivesArray(): number[] {
+  public getLivesArray(): number[] {
     return Array.from({ length: this.lives }, (_, index) => index);
+  }
+
+  public togglePause(): void {
+    if (!this.showInstructions) {
+      this.isPaused = !this.isPaused;
+      console.log('Game paused:', this.isPaused);
+    }
+  }
+
+  public resumeGame(): void {
+    this.isPaused = false;
+  }
+
+  public goToStats(): void {
+    this.isPaused = false;
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('lastGame');
+    }
+    this.router.navigate(['stats']);
+  }
+
+  public goToMenu(): void {
+    this.isPaused = false;
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('lastGame');
+    }
+    this.router.navigate(['']);
+  }
+
+  public startGame(): void {
+    this.showInstructions = false;
+    this.generateOperation();
   }
 }

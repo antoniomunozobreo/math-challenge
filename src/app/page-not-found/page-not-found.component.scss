@@ -1,15 +1,62 @@
+@use '../../styles.scss' as *;
+
 .not-found-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 80vh;
-    background-color: #34495e;
-    color: #ecf0f1;
-    text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: $primary-bg; // Fondo consistente con el tema de la app
+  padding: 1rem;
+}
+
+.not-found-content {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  max-width: 500px;
+  width: 100%;
+}
+
+.not-found-title {
+  font-size: 6rem;
+  font-weight: bold;
+  color: $warning-color; // Color de advertencia (naranja, por ejemplo)
+  margin: 0;
+  line-height: 1;
+}
+
+.not-found-message {
+  font-size: 1.5rem;
+  color: $text-color;
+  margin: 1rem 0 2rem;
+}
+
+.not-found-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.not-found-button {
+  padding: 0.75rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: $accent-color;
+  background-color: $secondary-color;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: $transition;
+  box-shadow: $box-shadow;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: lighten($secondary-color, 10%);
   }
-  
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: none;
   }
+}

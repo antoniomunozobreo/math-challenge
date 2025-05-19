@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 
@@ -7,17 +7,19 @@ import { HeaderComponent } from '../header/header.component';
   standalone: true,
   imports: [HeaderComponent],
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuComponent {
-  @Input() titulo: string = 'Menú';
+  @Input() public titulo: string = 'Menú';
+
   constructor(private router: Router) {}
 
-  play() {
+  public play(): void {
     this.router.navigate(['game']);
   }
 
-  stats() {
+  public stats(): void {
     this.router.navigate(['stats']);
   }
 }
