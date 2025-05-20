@@ -1,12 +1,12 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { TimerComponent } from '../timer/timer.component';
-import { OperationComponent } from '../operation/operation.component';
-import { AnswerOptionsComponent } from '../answer-options/answer-options.component';
-import { HeaderComponent } from '../header/header.component';
+import { TimerComponent } from '../../components/timer/timer.component';
+import { OperationComponent } from '../../components/operation/operation.component';
+import { AnswerOptionsComponent } from '../../components/answer-options/answer-options.component';
+import { HeaderComponent } from '../../components/header/header.component';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
-import { VolumeService } from '../services/volume.service';
+import { VolumeService } from '../../services/volume.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
